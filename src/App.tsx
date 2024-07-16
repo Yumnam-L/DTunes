@@ -1,74 +1,7 @@
-// import React, { useState, ChangeEvent } from 'react';
-// import axios from 'axios';
-// import Player from './components/Player';
-// import './index.css';
-
-// interface Result {
-//   id: {
-//     videoId: string;
-//   };
-//   snippet: {
-//     title: string;
-//     description: string;
-//     thumbnails: {
-//       default: {
-//         url: string;
-//       };
-//     };
-//   };
-// }
-
-// const App: React.FC = () => {
-//   const [query, setQuery] = useState<string>('');
-//   const [results, setResults] = useState<Result[]>([]);
-//   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
-
-//   const handleSearch = async () => {
-//     try {
-//       const response = await axios.get(`/api/search?query=${query}`);
-//       console.log("response:",response.data.items )
-//       setResults(response.data.items);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
-
-//   const handleVideoSelect = (videoId: string) => {
-//     setSelectedVideoId(videoId);
-//   };
-
-//   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-//     setQuery(e.target.value);
-//   };
-
-//   return (
-//     <div>
-//       <input 
-//         type="text" 
-//         value={query}
-//         onChange={handleInputChange}
-//         placeholder="Search for music"
-//       />
-//       <button onClick={handleSearch}>Search</button>
-//       <div>
-//         {results.map(result => (
-//           <div key={result.id.videoId} onClick={() => handleVideoSelect(result.id.videoId)}>
-//             <h3>{result.snippet.title}</h3>
-//             <p>{result.snippet.description}</p>
-//             <img src={result.snippet.thumbnails.default.url} alt={result.snippet.title} />
-//           </div>
-//         ))}
-//       </div>
-//       {selectedVideoId && <Player videoId={selectedVideoId} />}
-//     </div>
-//   );
-// };
-
-// export default App;
-
-
 import React, { useState, ChangeEvent } from 'react';
 import axios from 'axios';
+import Player from './components/Player';
+import './index.css';
 
 interface Result {
   id: {
@@ -88,14 +21,24 @@ interface Result {
 const App: React.FC = () => {
   const [query, setQuery] = useState<string>('');
   const [results, setResults] = useState<Result[]>([]);
+  const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/search?query=${query}`);
+      const response = await axios.get(`/api/search?query=${query}`);
+      console.log("response:", response.data.items);
       setResults(response.data.items);
     } catch (error) {
-      console.error(error);
+      if (axios.isAxiosError(error)) {
+        console.error('AxiosError:', error.response?.data || error.message);
+      } else {
+        console.error('Error:', error.message);
+      }
     }
+  };
+
+  const handleVideoSelect = (videoId: string) => {
+    setSelectedVideoId(videoId);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -113,18 +56,79 @@ const App: React.FC = () => {
       <button onClick={handleSearch}>Search</button>
       <div>
         {results.map(result => (
-          <div key={result.id.videoId}>
+          <div key={result.id.videoId} onClick={() => handleVideoSelect(result.id.videoId)}>
             <h3>{result.snippet.title}</h3>
             <p>{result.snippet.description}</p>
             <img src={result.snippet.thumbnails.default.url} alt={result.snippet.title} />
           </div>
         ))}
       </div>
+      {selectedVideoId && <Player videoId={selectedVideoId} />}
     </div>
   );
 };
 
 export default App;
+
+
+// import React, { useState, ChangeEvent } from 'react';
+// import axios from 'axios';
+
+// interface Result {
+//   id: {
+//     videoId: string;
+//   };
+//   snippet: {
+//     title: string;
+//     description: string;
+//     thumbnails: {
+//       default: {
+//         url: string;
+//       };
+//     };
+//   };
+// }
+
+// const App: React.FC = () => {
+//   const [query, setQuery] = useState<string>('');
+//   const [results, setResults] = useState<Result[]>([]);
+
+//   const handleSearch = async () => {
+//     try {
+//       const response = await axios.get(`http://localhost:5000/search?query=${query}`);
+//       setResults(response.data.items);
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
+
+//   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+//     setQuery(e.target.value);
+//   };
+
+//   return (
+//     <div>
+//       <input 
+//         type="text" 
+//         value={query}
+//         onChange={handleInputChange}
+//         placeholder="Search for music"
+//       />
+//       <button onClick={handleSearch}>Search</button>
+//       <div>
+//         {results.map(result => (
+//           <div key={result.id.videoId}>
+//             <h3>{result.snippet.title}</h3>
+//             <p>{result.snippet.description}</p>
+//             <img src={result.snippet.thumbnails.default.url} alt={result.snippet.title} />
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default App;
 
 
 
