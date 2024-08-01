@@ -1,30 +1,93 @@
-# React + TypeScript + Vite
+# D-Tunes 🎵
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+D-Tunes is a music streaming web application built with React, Vite, and Node.js. It allows users to search for music, register, log in, and stream their favorite tunes directly from YouTube.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **User Authentication:** Users can register and log in to access the app.
+- **Search Functionality:** Search for music using the YouTube API.
+- **Playback:** Stream selected music directly from the app.
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Prerequisites
 
-- Configure the top-level `parserOptions` property like this:
+- Node.js (v14 or higher)
+- npm
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+### Steps
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/Yumnam-L/DTunes.git
+   ```
+
+2. **Install dependencies for both the client and server:**
+
+   ```bash
+   # For client
+   npm install
+
+   # For server
+   cd ../server
+   npm install
+   ```
+
+3. **Set up environment variables:**
+
+   Create a `.env` file in the `server` directory with the following variables:
+
+   ```plaintext
+   MONGO_URI=your-mongodb-uri
+   PORT=5000
+   YOUTUBE_API_KEY=your-youtube-api-key
+   JWT_SECRET=your-jwt-secret
+   ```
+
+4. **Start the development servers:**
+
+   ```bash
+   # Start the server
+   cd server
+   npm run dev
+
+   # Start the client
+   npm run dev
+   ```
+
+5. **Access the app:**
+
+   Visit `http://localhost:5173` in your web browser.
+
+## Environment Variables
+
+Ensure you have the following environment variables set in the `.env` file in the `server` directory:
+
+- **MONGO_URI:** The MongoDB connection string.
+- **PORT:** The port number for the backend server (default is 5000).
+- **YOUTUBE_API_KEY:** Your API key for accessing the YouTube Data API.
+- **JWT_SECRET:** A secret key for signing JSON Web Tokens (JWTs) for authentication.
+
+## API Endpoints
+
+### Registration
+
+- **POST /api/register**
+  - Register a new user.
+  - **Request Body:** `{ username, email, password }`
+  - **Response:** `{ token }`
+
+### Login
+
+- **POST /api/login**
+  - Authenticate an existing user.
+  - **Request Body:** `{ email, password }`
+  - **Response:** `{ token }`
+
+### Search
+
+- **GET /api/search**
+  - Search for music using the YouTube API.
+  - **Query Parameters:** `query`
+  - **Response:** List of music matching the search query.
