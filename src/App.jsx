@@ -3,19 +3,22 @@ import axios from 'axios';
 import Player from './components/Player';
 import Login from './components/Login';
 import Register from './components/Register';
+import Modal from './components/Modal';
 import './index.css';
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
-  const [isRegistered, setIsRegistered] = useState(false); // Track registration status
+  const [isRegistered, setIsRegistered] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [selectedVideoId, setSelectedVideoId] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showModal, setShowModal] = useState(false); // Manage modal state
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      setAuthToken(token); // Automatically log in if token is found
+      setAuthToken(token);
     }
   }, []);
 
@@ -23,7 +26,7 @@ const App = () => {
     try {
       const response = await axios.get(`/api/search?query=${query}`, {
         headers: {
-          Authorization: `Bearer ${authToken}` // Send token with request
+          Authorization: `Bearer ${authToken}`
         }
       });
       setResults(response.data.items);
@@ -40,20 +43,28 @@ const App = () => {
     setQuery(e.target.value);
   };
 
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <div>
       {!authToken ? (
         <>
           {!isRegistered ? (
-            <Register setIsRegistered={setIsRegistered} />
+            <Register
+              setIsRegistered={setIsRegistered}
+              setErrorMessage={setErrorMessage}
+              setShowModal={setShowModal}
+            />
           ) : (
-            <Login setAuthToken={setAuthToken} />
+            <Login setAuthToken={setAuthToken} errorMessage={errorMessage} />
           )}
         </>
       ) : (
         <div>
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={query}
             onChange={handleInputChange}
             placeholder="Search for music"
@@ -71,10 +82,13 @@ const App = () => {
           {selectedVideoId && <Player videoId={selectedVideoId} />}
         </div>
       )}
+      {showModal && (
+        <Modal closeModal={closeModal}>
+          <p>{errorMessage}</p>
+        </Modal>
+      )}
     </div>
   );
 };
 
 export default App;
-
-

@@ -49,7 +49,7 @@ app.post(
   ],
   async (req, res) => {
     const errors = validationResult(req);
-    console.log("Inside ser/index", errors);
+    console.log("Inside src/index", errors);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
@@ -72,6 +72,7 @@ app.post(
 
       const payload = { user: { id: user.id } };
       console.log("payload", payload);
+      console.log("JWT_SECRET", process.env.JWT_SECRET);
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
@@ -124,7 +125,7 @@ app.post(
 );
 
 // Route to search YouTube
-app.get("/search", async (req, res) => {
+app.get("/api/search", async (req, res) => {
   const { query } = req.query; // Get the search query from the request
 
   try {
