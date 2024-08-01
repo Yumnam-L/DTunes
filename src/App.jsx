@@ -1,27 +1,12 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import Player from './components/Player';
 import './index.css';
 
-interface Result {
-  id: {
-    videoId: string;
-  };
-  snippet: {
-    title: string;
-    description: string;
-    thumbnails: {
-      default: {
-        url: string;
-      };
-    };
-  };
-}
-
-const App: React.FC = () => {
-  const [query, setQuery] = useState<string>('');
-  const [results, setResults] = useState<Result[]>([]);
-  const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
+const App = () => {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+  const [selectedVideoId, setSelectedVideoId] = useState(null);
 
   const handleSearch = async () => {
     try {
@@ -32,16 +17,16 @@ const App: React.FC = () => {
       if (axios.isAxiosError(error)) {
         console.error('AxiosError:', error.response?.data || error.message);
       } else {
-        console.error('Error:', error.message);
+        console.error("Error:", error);
       }
     }
   };
 
-  const handleVideoSelect = (videoId: string) => {
+  const handleVideoSelect = (videoId) => {
     setSelectedVideoId(videoId);
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e) => {
     setQuery(e.target.value);
   };
 
@@ -70,6 +55,80 @@ const App: React.FC = () => {
 
 export default App;
 
+// 2
+// import React, { useState, ChangeEvent } from 'react';
+// import axios from 'axios';
+// import Player from './components/Player';
+// import './index.css';
+
+// interface Result {
+//   id: {
+//     videoId: string;
+//   };
+//   snippet: {
+//     title: string;
+//     description: string;
+//     thumbnails: {
+//       default: {
+//         url: string;
+//       };
+//     };
+//   };
+// }
+
+// const App: React.FC = () => {
+//   const [query, setQuery] = useState<string>('');
+//   const [results, setResults] = useState<Result[]>([]);
+//   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
+
+//   const handleSearch = async () => {
+//     try {
+//       const response = await axios.get(`/api/search?query=${query}`);
+//       console.log("response:", response.data.items);
+//       setResults(response.data.items);
+//     } catch (error) {
+//       if (axios.isAxiosError(error)) {
+//         console.error('AxiosError:', error.response?.data || error.message);
+//       } else {
+//         console.error("Error:", error);
+//       }
+//     }
+//   };
+
+//   const handleVideoSelect = (videoId: string) => {
+//     setSelectedVideoId(videoId);
+//   };
+
+//   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+//     setQuery(e.target.value);
+//   };
+
+//   return (
+//     <div>
+//       <input 
+//         type="text" 
+//         value={query}
+//         onChange={handleInputChange}
+//         placeholder="Search for music"
+//       />
+//       <button onClick={handleSearch}>Search</button>
+//       <div>
+//         {results.map(result => (
+//           <div key={result.id.videoId} onClick={() => handleVideoSelect(result.id.videoId)}>
+//             <h3>{result.snippet.title}</h3>
+//             <p>{result.snippet.description}</p>
+//             <img src={result.snippet.thumbnails.default.url} alt={result.snippet.title} />
+//           </div>
+//         ))}
+//       </div>
+//       {selectedVideoId && <Player videoId={selectedVideoId} />}
+//     </div>
+//   );
+// };
+
+// export default App;
+
+// 1
 
 // import React, { useState, ChangeEvent } from 'react';
 // import axios from 'axios';
